@@ -9,9 +9,14 @@ const createUserService = (db) => {
 
   userService.register = (username, password) => {
     return bcrypt.hash(password, saltRounds).then((hash) => {
-      return db.insertPromise({ username, password: hash }).then((doc) => {
-        return doc;
-      });
+      return db
+        .insertPromise({ username, password: hash })
+        .then((doc) => {
+          return doc;
+        })
+        .catch((e) => {
+          debugger;
+        });
     });
   };
 

@@ -1,9 +1,11 @@
 const Express = require('express');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 const authRouter = require('./src/user-router');
 
 let server = new Express();
 server.use(bodyParser.json());
+server.use(helmet());
 server.use((req, res, next) => {
   console.log('--------- reqqq----', req.url, req.body);
   next();

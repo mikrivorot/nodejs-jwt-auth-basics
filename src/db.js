@@ -1,8 +1,31 @@
-const Datastore = require('nedb');
-const { promisify } = require('util');
+const mongoose = require('mongoose');
+try {
+  mongoose.connect(
+    'mongodb+srv://abc:abc@cluster0.yairg.mongodb.net/AuthDB?retryWrites=true&w=majority'
+  );
+} catch (e) {
+  debugger;
+}
 
-const db = new Datastore();
-db.insertPromise = promisify(db.insert);
-db.findOnePromise = promisify(db.findOne);
+const userSchema = {
+  username: {
+    type: String,
+  },
+  password: {
+    type: String,
+  },
+};
+
+const User = mongoose.model('User', userSchema);
+
+const db = {
+  insertPromise: async function ({ username, password }) {
+    const userDocument = new User({ username, password });
+    return userDocument.save();
+  },
+  findOnePromise: async function ({ username }) {
+    return User.findOne({ username }).exec();
+  },
+};
 
 module.exports = db;
